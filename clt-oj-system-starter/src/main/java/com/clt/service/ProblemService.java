@@ -1,0 +1,58 @@
+package com.clt.service;
+
+import com.clt.dto.ProblemCreationOrUpdateDTO;
+import com.clt.entity.Problem;
+import com.clt.vo.ProblemRecommendVO;
+import com.clt.vo.ProblemTitleInfoVO;
+
+import java.util.List;
+
+public interface ProblemService {
+
+    /**
+     * 获取题目列表,用于表格展示
+     */
+    Integer getProblemListCount();
+
+    /**
+     * 通过题目ID获取题目详情
+     */
+    Problem getProblemById(Integer id);
+
+    /**
+     * 添加问题
+     */
+    Problem CreateProblem(ProblemCreationOrUpdateDTO dto) throws Exception;
+
+
+    /**
+     * 更新问题
+     */
+    Problem UpdateProblem(ProblemCreationOrUpdateDTO dto) throws Exception;
+
+    /**
+     * 搜索题目
+     */
+    List<ProblemTitleInfoVO> searchProblem(String keyword);
+
+    /**
+     * 根据难度过滤题目
+     */
+    List<ProblemTitleInfoVO> filterProblem(String difficulty, Integer start, Integer pageSize);
+
+    /**
+     * 删除问题
+     */
+    boolean deleteProblem(Integer id) throws Exception;
+
+    /**
+     * 分页获取题目列表
+     */
+    List<ProblemTitleInfoVO> getProblemListOfPage(Integer start, Integer pageeSize);
+
+    /**
+     * 获取推荐题目
+     */
+    List<ProblemRecommendVO> getRecommendProblems();
+
+}

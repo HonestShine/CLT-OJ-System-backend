@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clt.mapper.TagMapper">
+
+    <!-- 添加标签 -->
+    <insert id="insert">
+        INSERT INTO tags (problem_id, name, color) VALUES (#{problemId}, #{name}, #{color})
+    </insert>
+
+    <!--  通过题目ID删除标签  -->
+    <delete id="deleteByProblemId">
+        DELETE FROM tags WHERE problem_id = #{problemId}
+    </delete>
+
+    <!--  通过题目ID获取标签列表  -->
+    <select id="getProblemTagListByProblemId" resultType="com.clt.entity.Tag">
+        SELECT * FROM tags WHERE problem_id = #{id}
+    </select>
+
+</mapper>
