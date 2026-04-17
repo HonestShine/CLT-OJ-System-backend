@@ -4,9 +4,9 @@ spring:
 #配置数据库连接信息
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/clt_oj_database
-    username: root
-    password: lhr061211
+    url: jdbc:mysql://localhost:3306/clt_oj_database  #YOUR_MYSQL_URL_AND_DATABASE
+    username: YOUR_MYSQL_USERNAME
+    password: YOUR_MYSQL_PASSWORD
     type: com.alibaba.druid.pool.DruidDataSource
 #Mybatis相关配置
 mybatis:
@@ -22,9 +22,9 @@ jwt:
 #阿里云OSS参数
 aliyun:
     oss:
-      endpoint: https://oss-cn-chengdu.aliyuncs.com
-      bucketName: clt-oj-avatar-store
-      region: cn-chengdu
+      endpoint: YOUR_ALIYUN_OSS_ENDPOINT
+      bucketName: YOUR_ALIYUN_OSS_BUCKETNAME
+      region: YOUR_ALIYUN_OSS_REGION
 
 dashscope:
   api-key: ${DASHSCOPE_API_KEY:sk-default-key-for-development}
