@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clt.mapper.TagMapper">
+
+    <!-- 添加标签 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="tag.id">
+        INSERT INTO tags (name, color) VALUES (#{tag.name}, #{tag.color})
+    </insert>
+
+    <!-- 添加标签关系 -->
+    <insert id="insertRelationship">
+        INSERT INTO problem_tag_relation (problem_id, tag_id) VALUES (#{tag.problemId}, #{tag.id})
+    </insert>
+
+    <!--  修改标签颜色  -->
+    <update id="setTagColor">
+        UPDATE tags SET color = #{tag.color} WHERE id = #{tag.id}
+    </update>
+
+    <!--  通过题目ID删除标签  -->
+    <delete id="deleteByProblemId">
+        DELETE FROM problem_tag_relation WHERE problem_id = #{id}
+    </delete>
+
+    <!--  通过题目ID获取标签列表  -->
+    <select id="getProblemTagListByProblemId" resultType="com.clt.entity.Tag">
+        SELECT id, problem_id, name, color
+        FROM tags
+                 JOIN problem_tag_relation ON tags.id = problem_tag_relation.tag_id
+        WHERE problem_tag_relation.problem_id = #{id};
+    </select>
+
+    <!--  判断标签是否存在  -->
+    <select id="isExist" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tags WHERE name = #{name}
+    </select>
+
+    <!--  通过标签名获取标签ID  -->
+    <select id="getIdByName" resultType="java.lang.Integer">
+        SELECT id FROM tags WHERE name = #{name}
+    </select>
+
+</mapper>
