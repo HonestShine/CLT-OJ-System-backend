@@ -4,6 +4,7 @@ import com.clt.dto.ProblemCreationOrUpdateDTO;
 import com.clt.entity.Problem;
 import com.clt.entity.Result;
 import com.clt.enums.ProblemDifficulty;
+import com.clt.exception.*;
 import com.clt.utils.JwtUtil;
 import com.clt.vo.ProblemAllInfoVO;
 import com.clt.vo.ProblemRecommendVO;
@@ -51,10 +52,13 @@ public class ProblemController {
             return Result.error("无效的 ID");
         }
 
-        Problem problem = problemService.getProblemById(id);
-        if (problem == null) {
-            return Result.error("404", "题目不存在");
+        Problem problem;
+        try {
+            problem = problemService.getProblemById(id);
+        } catch (NoProblemException e) {
+            return Result.error("404", e.getMessage());
         }
+
         ProblemAllInfoVO problemAllInfoVO = new ProblemAllInfoVO(
                 problem.getId(),
                 problem.getTitle(),
@@ -104,8 +108,18 @@ public class ProblemController {
         Problem problem = null;
         try {
             problem = problemService.CreateProblem(dto);
-        } catch (Exception e) {
-            return Result.error("500", "题目/题目描述/输入格式/输出格式不能为空 或 题目已存在");
+        } catch (ProblemIsExistException e) {
+            return Result.error("400", "题目已存在");
+        }catch (NullProblemTitleAndDescriptionException e) {
+            return Result.error("400", "标题 或 题目描述不能为空");
+        }catch (NullProblemInputFormatException e) {
+            return Result.error("400", "输入格式不能为空");
+        }catch (NullProblemOutputFormatException e) {
+            return Result.error("400", "输出格式不能为空");
+        }catch (NullProblemSampleException e) {
+            return Result.error("400", "题目样例不能为空");
+        }catch (RuntimeException e) {
+            return Result.error("500", e.getMessage());
         }
 
         if (problem == null) {
@@ -129,8 +143,18 @@ public class ProblemController {
         Problem problem;
         try {
             problem = problemService.UpdateProblem(dto);
-        } catch (Exception e) {
-            return Result.error("500", "题目ID//输入格式/输出格式不能为空 或 题目不存在");
+        }catch (NullProblemIdException e) {
+            return Result.error("400", "题目ID为空");
+        }catch (NullProblemInputFormatException e) {
+            return Result.error("400", "输入格式不能为空");
+        }catch (NullProblemOutputFormatException e) {
+            return Result.error("400", "输出格式不能为空");
+        }catch (NullProblemSampleException e) {
+            return Result.error("400", "题目样例不能为空");
+        }catch (ProblemIsNotExistException e) {
+            return Result.error("404", "题目不存在");
+        }catch (RuntimeException e) {
+            return Result.error("500", e.getMessage());
         }
         if (problem == null) {
             return Result.error("500", "修改失败");
@@ -152,8 +176,12 @@ public class ProblemController {
         boolean result;
         try {
             result = problemService.deleteProblem(id);
-        } catch (Exception e) {
-            return Result.error("500", "题目ID为空 或 题目不存在 或 程序异常");
+        }catch (NullProblemIdException e) {
+            return Result.error("400", "题目ID为空");
+        }catch (ProblemIsNotExistException e){
+            return Result.error("404", "题目不存在");
+        }catch (RuntimeException e) {
+            return Result.error("500", "系统异常");
         }
         if (!result) {
             return Result.error("500", "删除失败");

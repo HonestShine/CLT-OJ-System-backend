@@ -23,6 +23,14 @@ public class TagServiceImpl implements TagService {
     }
 
     /**
+     * 判断标签是否存在
+     */
+    @Override
+    public boolean isExist(String name) {
+        return tagMapper.isExist(name) > 0;
+    }
+
+    /**
      * 通过题目ID删除标签
      */
     @Override
@@ -36,5 +44,29 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> getProblemTagListByProblemId(Integer id) {
         return tagMapper.getProblemTagListByProblemId(id);
+    }
+
+    /**
+     * 添加标签关系
+     */
+    @Override
+    public boolean insertRelationship(Tag tag) {
+        return tagMapper.insertRelationship(tag) > 0;
+    }
+
+    /**
+     * 设置标签颜色
+     */
+    @Override
+    public boolean setTagColor(Tag tag) {
+        return tagMapper.setTagColor(tag) > 0;
+    }
+
+    /**
+     * 通过标签名获取标签ID
+     */
+    @Override
+    public Integer getIdByName(String name) {
+        return tagMapper.getIdByName(name);
     }
 }

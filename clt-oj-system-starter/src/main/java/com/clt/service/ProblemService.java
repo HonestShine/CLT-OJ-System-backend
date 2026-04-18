@@ -2,6 +2,7 @@ package com.clt.service;
 
 import com.clt.dto.ProblemCreationOrUpdateDTO;
 import com.clt.entity.Problem;
+import com.clt.exception.NoProblemException;
 import com.clt.vo.ProblemRecommendVO;
 import com.clt.vo.ProblemTitleInfoVO;
 
@@ -17,18 +18,18 @@ public interface ProblemService {
     /**
      * 通过题目ID获取题目详情
      */
-    Problem getProblemById(Integer id);
+    Problem getProblemById(Integer id) throws NoProblemException;
 
     /**
      * 添加问题
      */
-    Problem CreateProblem(ProblemCreationOrUpdateDTO dto) throws Exception;
+    Problem CreateProblem(ProblemCreationOrUpdateDTO dto) throws RuntimeException;
 
 
     /**
      * 更新问题
      */
-    Problem UpdateProblem(ProblemCreationOrUpdateDTO dto) throws Exception;
+    Problem UpdateProblem(ProblemCreationOrUpdateDTO dto) throws RuntimeException;
 
     /**
      * 搜索题目
@@ -43,7 +44,7 @@ public interface ProblemService {
     /**
      * 删除问题
      */
-    boolean deleteProblem(Integer id) throws Exception;
+    boolean deleteProblem(Integer id) throws RuntimeException;
 
     /**
      * 分页获取题目列表

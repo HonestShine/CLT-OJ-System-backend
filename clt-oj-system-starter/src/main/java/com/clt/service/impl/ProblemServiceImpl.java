@@ -2,6 +2,7 @@ package com.clt.service.impl;
 
 import com.clt.dto.ProblemCreationOrUpdateDTO;
 import com.clt.enums.ProblemDifficulty;
+import com.clt.exception.*;
 import com.clt.vo.ProblemRecommendVO;
 import com.clt.vo.ProblemTitleInfoVO;
 import com.clt.enums.SubmissionStatus;
@@ -47,10 +48,10 @@ public class ProblemServiceImpl implements ProblemService {
      * 根据题目ID获取题目详情
      */
     @Override
-    public Problem getProblemById(Integer id) {
+    public Problem getProblemById(Integer id) throws NoProblemException {
         Problem problem = problemMapper.getProblemById(id);
         if (problem == null) {
-            return null;
+            throw new NoProblemException("题目不存在");
         }
         problem.setTags(tagService.getProblemTagListByProblemId(id));
         problem.setSamples(problemSampleService.getProblemSampleListByProblemIdIfVisible(id));
@@ -62,26 +63,26 @@ public class ProblemServiceImpl implements ProblemService {
      */
     @Transactional
     @Override
-    public Problem CreateProblem(ProblemCreationOrUpdateDTO dto) throws Exception {
+    public Problem CreateProblem(ProblemCreationOrUpdateDTO dto) throws RuntimeException {
 
         if (problemMapper.getIdByTitleAndDescription(dto.getTitle(), dto.getDescription()) != null) {
-            throw new NullPointerException("题目已存在");
+            throw new ProblemIsExistException("题目已存在");
         }
 
         if (dto.getTitle() == null || dto.getTitle().isEmpty() || dto.getDescription() == null || dto.getDescription().isEmpty()) {
-            throw new NullPointerException("标题或描述不能为空");
+            throw new NullProblemTitleAndDescriptionException("标题或描述不能为空");
         }
 
         if (dto.getInputFormat() == null || dto.getInputFormat().isEmpty()) {
-            throw new NullPointerException("输入格式不能为空");
+            throw new NullProblemInputFormatException("输入格式不能为空");
         }
 
         if (dto.getOutputFormat() == null || dto.getOutputFormat().isEmpty()) {
-            throw new NullPointerException("输出格式不能为空");
+            throw new NullProblemOutputFormatException("输出格式不能为空");
         }
 
         if (dto.getSamples() == null || dto.getSamples().isEmpty()) {
-            throw new NullPointerException("题目样例不能为空");
+            throw new NullProblemSampleException("题目样例不能为空");
         }
 
         Problem problem = new Problem();
@@ -95,7 +96,7 @@ public class ProblemServiceImpl implements ProblemService {
         problem.setHint(dto.getHint());
         int rows = problemMapper.insert(problem);
         if (rows == 0) {
-            return null;
+            throw new RuntimeException("添加题目失败");
         }
         Integer id = problem.getId();
 
@@ -106,10 +107,15 @@ public class ProblemServiceImpl implements ProblemService {
                 tag.setProblemId(id);
                 tag.setName(t.getName());
                 tag.setColor(t.getColor());
-                flag.set(tagService.insert(tag));
+                if (!tagService.isExist(tag.getName())){
+                    flag.set(tagService.insert(tag));
+                }else {
+                    tag.setId(tagService.getIdByName(tag.getName()));
+                }
+                flag.set(tagService.insertRelationship(tag));
             });
             if (!flag.get()) {
-                return null;
+                throw new RuntimeException("添加标签失败");
             }
         }
 
@@ -125,7 +131,7 @@ public class ProblemServiceImpl implements ProblemService {
                 flag.set(problemSampleService.insert(sample));
             });
             if (!flag.get()) {
-                return null;
+                throw new RuntimeException("添加样例失败");
             }
         }
 
@@ -139,27 +145,27 @@ public class ProblemServiceImpl implements ProblemService {
      */
     @Transactional
     @Override
-    public Problem UpdateProblem(ProblemCreationOrUpdateDTO dto) throws Exception {
+    public Problem UpdateProblem(ProblemCreationOrUpdateDTO dto) throws RuntimeException {
 
         if (dto.getId() == null) {
-            throw new IllegalArgumentException("题目ID不能为空");
+            throw new NullProblemIdException("题目ID不能为空");
         }
 
         if (dto.getInputFormat() == null || dto.getInputFormat().isEmpty()) {
-            throw new NullPointerException("输入格式不能为空");
+            throw new NullProblemInputFormatException("输入格式不能为空");
         }
 
         if (dto.getOutputFormat() == null || dto.getOutputFormat().isEmpty()) {
-            throw new NullPointerException("输出格式不能为空");
+            throw new NullProblemOutputFormatException("输出格式不能为空");
         }
 
         if (dto.getSamples() == null || dto.getSamples().isEmpty()) {
-            throw new NullPointerException("题目样例不能为空");
+            throw new NullProblemSampleException("题目样例不能为空");
         }
 
         Problem problem = problemMapper.getProblemById(dto.getId());
         if (problem == null) {
-            throw new IllegalArgumentException("题目不存在");
+            throw new ProblemIsNotExistException("题目不存在");
         }
 
         problem.setTitle(dto.getTitle());
@@ -171,7 +177,7 @@ public class ProblemServiceImpl implements ProblemService {
         problem.setDifficulty(dto.getDifficulty());
         problem.setHint(dto.getHint());
         if (problemMapper.update(problem) == 0) {
-            return null;
+            throw  new RuntimeException("更新题目失败");
         }
 
         if (dto.getTags() != null && !dto.getTags().isEmpty()) {
@@ -182,10 +188,16 @@ public class ProblemServiceImpl implements ProblemService {
                 tag.setProblemId(problemMapper.getIdByTitleAndDescription(problem.getTitle(), problem.getDescription()));
                 tag.setName(t.getName());
                 tag.setColor(t.getColor());
-                flag.set(tagService.insert(tag));
+                if (!tagService.isExist(tag.getName())){
+                    flag.set(tagService.insert(tag));
+                }else {
+                    tag.setId(tagService.getIdByName(tag.getName()));
+                    flag.set(tagService.setTagColor(tag));
+                }
+                flag.set(tagService.insertRelationship(tag));
             });
             if (!flag.get()) {
-                return null;
+                throw new RuntimeException("更新标签失败");
             }
         }
 
@@ -202,7 +214,7 @@ public class ProblemServiceImpl implements ProblemService {
                 flag.set(problemSampleService.insert(sample));
             });
             if (!flag.get()) {
-                return null;
+                throw new RuntimeException("更新样例失败");
             }
         }
 
@@ -214,7 +226,15 @@ public class ProblemServiceImpl implements ProblemService {
      */
     @Transactional
     @Override
-    public boolean deleteProblem(Integer id) throws Exception {
+    public boolean deleteProblem(Integer id) throws RuntimeException {
+
+        if (id == null) {
+            throw new NullProblemIdException("题目ID不能为空");
+        }
+        if (problemMapper.getProblemById(id) == null) {
+            throw new ProblemIsNotExistException("题目不存在");
+        }
+
         int ProblemRows;
         try {
             tagService.deleteByProblemId(id);
