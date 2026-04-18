@@ -278,7 +278,6 @@ CREATE TABLE `problems` (
 
 **字段说明**：
 - `id`：标签ID，自增主键
-- `problem_id`：题目ID，外键关联problems表
 - `name`：标签名称，唯一
 - `color`：标签颜色，默认'#ffff'
 
@@ -290,14 +289,35 @@ CREATE TABLE `problems` (
 ```sql
 CREATE TABLE `tags` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `problem_id` bigint NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `color` varchar(20) DEFAULT '#ffff',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `problem_id` (`problem_id`),
-  CONSTRAINT `tags_ibfk_1` FOREIGN KEY (`problem_id`) REFERENCES `problems` (`id`)
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+```
+
+#### problem_tag_relation
+
+**描述**：存储题目标签关系
+
+**字段说明**：
+- `tag_id`: 标签ID，外键关联tags表
+- `problem_id`: 题目ID，外键关联problems表
+
+**表间关系**:
+- `tag_id` 外键关联 `tags.id`
+- `problem_id` 外键关联 `problems.id`
+
+**创建表SQL**：
+
+```sql
+CREATE TABLE `problem_tag_relation` (
+    `tag_id` bigint NOT NULL,
+    `problem_id` bigint NOT NULL,
+    PRIMARY KEY (`tag_id`,`problem_id`),
+    CONSTRAINT `fk_pt_problem` FOREIGN KEY (`problem_id`) REFERENCES `problems` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_pt_tag`     FOREIGN KEY (`tag_id`)     REFERENCES `tags` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
 
 #### problem_samples 表
@@ -640,30 +660,6 @@ CREATE TABLE `solution_comment` (
   CONSTRAINT `solution_comment_ibfk_1` FOREIGN KEY (`solution_id`) REFERENCES `solutions` (`id`),
   CONSTRAINT `solution_comment_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-```
-
-### 表间关系图
-
-```
-users ─────┐
-           │
-           ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                                                                   │
-▼                                                                   ▼
-submissions ──────► submission_test_cases                pets ───────► pet_phrases
-│                                                                   │
-▼                                                                   │
-user_problem_status                                                solutions
-│                                                                   │
-▼                                                                   ▼
-solved_problem_counts                                solution_content
-│                                                                   │
-▼                                                                   ▼
-problems ──────► problem_samples                          solution_comment
-│
-▼
-tags
 ```
 
 ***
