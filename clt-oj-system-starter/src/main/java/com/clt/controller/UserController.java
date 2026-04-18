@@ -2,6 +2,9 @@ package com.clt.controller;
 
 import com.clt.entity.Result;
 import com.clt.entity.User;
+import com.clt.exception.FileStorageSpaceOutOfRangeException;
+import com.clt.exception.FileSuffixException;
+import com.clt.exception.NullFileException;
 import com.clt.service.UserService;
 import com.clt.utils.JwtUtil;
 import com.clt.vo.AllUserResultVO;
@@ -30,7 +33,7 @@ public class UserController {
     public Result getAllUsers() {
         List<AllUserResultVO> users = userService.getAllUsers();
         if (users == null) {
-            return Result.error("获取用户信息失败");
+            return Result.error("404", "获取用户信息失败");
         }
         return Result.success(users);
     }
@@ -67,12 +70,16 @@ public class UserController {
                 || user.getHobby() == null
                 || user.getIntroduction() == null
         ) {
-            return Result.error("请填写需要更新的信息");
+            return Result.error("至少需要昵称/爱好/简介其中一项信息");
         }
         //更新用户信息
-        userService.updateUserInfo(user, userId);
+        try {
+            userService.updateUserInfo(user, userId);
+        } catch (RuntimeException e) {
+            return Result.error("400", e.getMessage());
+        }
         UserUpdateVO result = userService.getUserInfo(userId);
-        return Result.success(result);
+        return userService.getUserInfo(userId) != null ? Result.success(result) : Result.error("500", "服务器错误");
     }
 
     /**
@@ -87,7 +94,19 @@ public class UserController {
             return Result.error("文件不能为空");
         }
         //上传文件
-        String url = userService.uploadAvatar(oldAvatar, newAvatar, userId);
+        String url;
+        try {
+            url = userService.uploadAvatar(oldAvatar, newAvatar, userId);
+        }catch (NullFileException e) {
+            return Result.error("文件内容不能为空");
+        }catch (FileSuffixException e) {
+            return Result.error("文件格式错误(只支持 JPG|JPEG、PNG、GIF 格式图片)");
+        }catch (FileStorageSpaceOutOfRangeException e) {
+            return Result.error("文件大小不能超过5MB");
+        }catch (Exception e) {
+            return Result.error("500", e.getMessage());
+        }
+
         if (url == null) {
             return Result.error("上传失败");
         }

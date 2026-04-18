@@ -75,13 +75,13 @@ public class AuthController {
         }
 
         if (!userService.isExistByUsername(username)) {
-            return Result.error("用户不存在");
+            return Result.error("用户名或密码错误");
         }
 
         responseUser = userService.loginByUsername(username, password);
 
         if (responseUser == null) {
-            return Result.error("密码错误");
+            return Result.error("用户名或密码错误");
         }
 
         //获取token
@@ -96,7 +96,7 @@ public class AuthController {
     @PutMapping("/change")
     public Result change(@RequestBody UserChangeDTO userChangeDTO) {
         if (!userService.changePassword(userChangeDTO)) {
-            return Result.error("修改失败");
+            return Result.error("用户名或密码错误");
         }
 
         return Result.success();

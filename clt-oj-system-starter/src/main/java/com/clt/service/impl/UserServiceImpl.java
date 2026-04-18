@@ -3,6 +3,9 @@ package com.clt.service.impl;
 import com.clt.dto.UserChangeDTO;
 import com.clt.entity.User;
 import com.clt.enums.UserType;
+import com.clt.exception.UserHobbyOutOfRangeException;
+import com.clt.exception.UserIntroductionOutOfRangeException;
+import com.clt.exception.UserNicknameOutOfRangeException;
 import com.clt.mapper.SolvedProblemCountMapper;
 import com.clt.mapper.SubmissionMapper;
 import com.clt.mapper.UserMapper;
@@ -15,6 +18,7 @@ import com.clt.vo.UserUpdateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -210,7 +214,17 @@ public class UserServiceImpl implements UserService {
      * 更新用户信息
      */
     @Override
-    public void updateUserInfo(User user, Integer userId) {
+    public void updateUserInfo(User user, Integer userId) throws RuntimeException {
+        if (user.getNickname().length() > 15) {
+            throw new UserNicknameOutOfRangeException("用户昵称长度超出限制(15个字符)");
+        }
+        if (user.getHobby().length() > 200) {
+            throw new UserHobbyOutOfRangeException("用户爱好长度超出限制(200个字符)");
+        }
+        if (user.getIntroduction().length() > 200) {
+            throw new UserIntroductionOutOfRangeException("用户简介长度超出限制(200个字符)");
+        }
+
         userMapper.updateUserInfo(user, userId);
     }
 
@@ -241,27 +255,25 @@ public class UserServiceImpl implements UserService {
      * 上传头像
      */
     @Override
-    public String uploadAvatar(String oldAvatarUrl, MultipartFile avatar, Integer userId) {
+    public String uploadAvatar(String oldAvatarUrl, MultipartFile avatar, Integer userId) throws Exception {
         String fileName;
-        try {
-            //删除原有头像
-            //从URL地址中获取文件名  例如：url：https://clt-oj-avatar-store.oss-cn-chengdu.aliyuncs.com/2026/04/7e6fd37a-9329-496e-a52d-900d509fe587.jpg
-            int schemeEndIndex = oldAvatarUrl.indexOf("://") + 3;  // 找到 "://" 后的位置 +3 = 协议结束后的位置
-            int slashIndex = oldAvatarUrl.indexOf('/', schemeEndIndex);  // 找到域名后的第一个 '/'
-            String objectKey = oldAvatarUrl.substring(slashIndex + 1);  // 取 '/' 后面的内容
-            if (objectKey.isEmpty()) {
-                return null;
-            }
-            //排除默认头像
-            if (!objectKey.equalsIgnoreCase(DEFAULT_AVATAR_OBJECT_KEY)) {
-                aliyunOSSUtil.delete(objectKey);
-            }
-            //上传头像
-            fileName = aliyunOSSUtil.upload(avatar.getBytes(), avatar.getOriginalFilename());
-            userMapper.updateUserInfo(new User(userId, null, null, null, null, null, null, null, fileName), userId);
-        } catch (Exception e) {
-            return null;
+
+        //删除原有头像
+        //从URL地址中获取文件名  例如：url：https://clt-oj-avatar-store.oss-cn-chengdu.aliyuncs.com/2026/04/7e6fd37a-9329-496e-a52d-900d509fe587.jpg
+        int schemeEndIndex = oldAvatarUrl.indexOf("://") + 3;  // 找到 "://" 后的位置 +3 = 协议结束后的位置
+        int slashIndex = oldAvatarUrl.indexOf('/', schemeEndIndex);  // 找到域名后的第一个 '/'
+        String objectKey = oldAvatarUrl.substring(slashIndex + 1);  // 取 '/' 后面的内容
+        if (objectKey.isEmpty()) {
+            throw new RuntimeException("原头像文件获取失败");
         }
+        //排除默认头像
+        if (!objectKey.equalsIgnoreCase(DEFAULT_AVATAR_OBJECT_KEY)) {
+            aliyunOSSUtil.delete(objectKey);
+        }
+        //上传头像
+        fileName = aliyunOSSUtil.upload(avatar.getBytes(), avatar.getOriginalFilename());
+        userMapper.updateUserInfo(new User(userId, null, null, null, null, null, null, null, fileName), userId);
+
         return fileName;
     }
 

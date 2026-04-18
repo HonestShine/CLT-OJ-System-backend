@@ -50,7 +50,7 @@ public interface UserMapper {
     /**
      * 更新用户信息
      */
-    void updateUserInfo(@Param("user") User user, @Param("userId") Integer userId);
+    int updateUserInfo(@Param("user") User user, @Param("userId") Integer userId);
 
     /**
      * 删除用户

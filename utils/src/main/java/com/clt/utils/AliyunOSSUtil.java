@@ -4,6 +4,9 @@ import com.aliyun.oss.*;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
 import com.aliyun.oss.model.OSSObject;
+import com.clt.exception.FileStorageSpaceOutOfRangeException;
+import com.clt.exception.FileSuffixException;
+import com.clt.exception.NullFileException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -58,19 +61,19 @@ public class AliyunOSSUtil {
     /**
      * 上传文件
      */
-    public String upload(byte[] content, String originalFilename) {
+    public String upload(byte[] content, String originalFilename) throws RuntimeException {
         // 校验文件大小：最大 5MB
         if (content == null || content.length == 0) {
-            throw new IllegalArgumentException("文件内容不能为空");
+            throw new NullFileException("文件内容不能为空");
         }
         //检查文件格式
         if (originalFilename == null || !originalFilename.matches(".*\\.(jpg|jpeg|png|gif)$")) {
-            throw new IllegalArgumentException("只支持 JPG、PNG、GIF 格式图片");
+            throw new FileSuffixException("只支持 JPG、PNG、GIF 格式图片");
         }
         //校验文件大小：最大5MB
         final long MAX_CONTENT_LENGTH = 5 * 1024 * 1024;
         if (content.length > MAX_CONTENT_LENGTH) {
-            throw new RuntimeException("文件大小不能超过5MB");
+            throw new FileStorageSpaceOutOfRangeException("文件大小不能超过5MB");
         }
         //以当天年月作为文件夹保存当月的头像文件
         String dir = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM"));
@@ -100,7 +103,7 @@ public class AliyunOSSUtil {
     /**
      * 下载文件
      */
-    public OSSObject download(String fileName) {
+    public OSSObject download(String fileName) throws RuntimeException {
         try {
             return ossClient.getObject(bucketName, fileName);
         } catch (OSSException | ClientException e) {

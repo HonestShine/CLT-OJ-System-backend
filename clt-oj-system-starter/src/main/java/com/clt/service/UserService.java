@@ -70,7 +70,7 @@ public interface UserService {
     /**
      * 修改用户信息
      */
-    void updateUserInfo(User user, Integer userId);
+    void updateUserInfo(User user, Integer userId) throws RuntimeException;
 
     /**
      * 获取用户信息
@@ -80,7 +80,7 @@ public interface UserService {
     /**
      * 上传用户头像
      */
-    String uploadAvatar(String oldAvatarUrl, MultipartFile avatar, Integer userId);
+    String uploadAvatar(String oldAvatarUrl, MultipartFile avatar, Integer userId) throws Exception;
 
     /**
      * 删除用户
