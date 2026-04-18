@@ -4,6 +4,7 @@ import com.clt.dto.SubmissionCodeDTO;
 import com.clt.entity.JudgeResult;
 import com.clt.entity.Result;
 import com.clt.service.SubmissionService;
+import com.clt.service.UserService;
 import com.clt.utils.JwtUtil;
 import com.clt.vo.SubmissionResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class SubmissionController {
 
     @Autowired
     private SubmissionService submissionService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -98,6 +102,12 @@ public class SubmissionController {
      */
     @GetMapping("/user/{userId}")
     public Result getUserSubmissionResult(@PathVariable Integer userId) {
+        if (userId == null || userId <= 0) {
+            return Result.error("无效的用户 ID");
+        }
+        if (userService.getUserById(userId) == null) {
+            return Result.error("用户不存在");
+        }
         return Result.success(submissionService.getUserSubmissionResult(userId));
     }
 
