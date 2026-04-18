@@ -105,7 +105,7 @@ public class ProblemController {
         if (jwtUtil.isUser(token)) {
             return Result.error("401", "用户身份验证失败，需管理员权限");
         }
-        Problem problem = null;
+        Problem problem;
         try {
             problem = problemService.CreateProblem(dto);
         } catch (ProblemIsExistException e) {
