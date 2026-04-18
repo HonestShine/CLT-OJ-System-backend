@@ -37,7 +37,7 @@ public class SolutionServiceImpl implements SolutionService {
      */
     @Transactional
     @Override
-    public Solution createSolution(Solution solution) throws RuntimeException{
+    public Solution createSolution(Solution solution) throws RuntimeException {
         int rows;
         if (solution.getIsOfficial() == 1) {
             rows = solutionMapper.createSolutionOfOfficial(solution);

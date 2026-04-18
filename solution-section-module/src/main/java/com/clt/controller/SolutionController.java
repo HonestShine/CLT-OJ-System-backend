@@ -43,7 +43,7 @@ public class SolutionController {
         try {
             createdSolution = solutionService.createSolution(solution);
         } catch (RuntimeException e) {
-            return Result.error( "500", "创建解决方案失败");
+            return Result.error( "500", e.getMessage());
         }
         return createdSolution != null ? Result.success(createdSolution) : Result.error( "500", "创建解决方案失败");
     }
@@ -53,6 +53,10 @@ public class SolutionController {
      */
     @DeleteMapping("/{id}")
     public Result deleteSolution(@PathVariable Integer id) {
+        if (id == null || id <= 0) {
+            return Result.error("400", "无效的ID");
+        }
+
         boolean deleted = solutionService.deleteSolution(id);
         return deleted ? Result.success() : Result.error("500", "删除解决方案失败");
     }
@@ -71,6 +75,10 @@ public class SolutionController {
      */
     @PutMapping("/likeSolution/{id}")
     public Result likeSolution(@PathVariable Integer id) {
+        if (id == null || id <= 0) {
+            return Result.error("400", "无效的ID");
+        }
+
         boolean liked = solutionService.likeSolution(id);
         return liked ? Result.success() : Result.error("500", "点赞失败");
     }
@@ -80,6 +88,10 @@ public class SolutionController {
      */
     @PutMapping("/likeComment/{id}")
     public Result likeComment(@PathVariable Integer id) {
+        if (id == null || id <= 0) {
+            return Result.error("400", "无效的ID");
+        }
+
         boolean liked = commentService.likeComment(id);
         return liked ? Result.success() : Result.error("500", "点赞失败");
     }
@@ -116,6 +128,10 @@ public class SolutionController {
      */
     @DeleteMapping("/deleteComment/{solutionId}/{commentId}")
     public Result deleteComment(@PathVariable Integer solutionId, @PathVariable Integer commentId) {
+        if (solutionId == null || solutionId <= 0 || commentId == null || commentId <= 0) {
+            return Result.error("400", "无效的ID");
+        }
+
         boolean deleted = commentService.deleteComment(solutionId, commentId);
         return deleted ? Result.success() : Result.error("500", "删除评论失败");
     }
@@ -125,6 +141,10 @@ public class SolutionController {
      */
     @PutMapping("/cancelLikeSolution/{id}")
     public Result cancelLikeSolution(@PathVariable Integer id) {
+        if (id == null || id <= 0) {
+            return Result.error("400", "无效的ID");
+        }
+
         boolean canceled = solutionService.cancelLikeSolution(id);
         return canceled ? Result.success() : Result.error("500", "取消点赞失败");
     }
@@ -134,6 +154,10 @@ public class SolutionController {
      */
     @PutMapping("/cancelLikeComment/{id}")
     public Result cancelLikeComment(@PathVariable Integer id) {
+        if (id == null || id <= 0) {
+            return Result.error("400", "无效的ID");
+        }
+
         boolean canceled = commentService.cancelLikeComment(id);
         return canceled ? Result.success() : Result.error("500", "取消点赞失败");
     }
