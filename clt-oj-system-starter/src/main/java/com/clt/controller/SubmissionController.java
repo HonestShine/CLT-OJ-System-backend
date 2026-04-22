@@ -42,7 +42,7 @@ public class SubmissionController {
         //利用token获取用户ID
         Integer userId = jwtUtil.parseToken(token).get("id", Integer.class);
 
-        SubmissionResultVO result = null;
+        SubmissionResultVO result;
         try {
             result = submissionService.submitCode(submissionCodeDTO, userId);
         } catch (NullProblemIdException e) {

@@ -4,7 +4,6 @@ import com.clt.dto.SubmissionCodeDTO;
 import com.clt.entity.JudgeResult;
 import com.clt.entity.Problem;
 import com.clt.entity.ProblemSample;
-import com.clt.entity.TestCase;
 import com.clt.enums.Languages;
 import com.clt.enums.SubmissionStatus;
 import com.clt.mapper.ProblemMapper;
@@ -14,10 +13,8 @@ import com.clt.utils.Judge0Util;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
