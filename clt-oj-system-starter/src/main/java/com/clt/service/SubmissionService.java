@@ -16,7 +16,7 @@ public interface SubmissionService {
     /**
      * 提交代码
      */
-    SubmissionResultVO submitCode(SubmissionCodeDTO submissionCodeDTO, Integer userId) throws Exception;
+    SubmissionResultVO submitCode(SubmissionCodeDTO submissionCodeDTO, Integer userId) throws RuntimeException;
 
     /**
      * 获取提交结果详情

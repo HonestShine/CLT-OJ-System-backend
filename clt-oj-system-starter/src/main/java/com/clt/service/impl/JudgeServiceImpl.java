@@ -31,7 +31,7 @@ public class JudgeServiceImpl implements JudgeService {
 
     // 判题
     @Override
-    public JudgeResult judge(SubmissionCodeDTO submissionCodeDTO) throws Exception {
+    public JudgeResult judge(SubmissionCodeDTO submissionCodeDTO) throws RuntimeException {
         JudgeResult judgeResult = new JudgeResult();
         judgeResult.setSubmitTime(LocalDateTime.now());
 

@@ -8,6 +8,6 @@ public interface JudgeService {
     /**
      * 判题
      */
-    JudgeResult judge(SubmissionCodeDTO submissionCodeDTO) throws Exception;
+    JudgeResult judge(SubmissionCodeDTO submissionCodeDTO) throws RuntimeException;
 
 }

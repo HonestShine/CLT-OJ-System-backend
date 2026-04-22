@@ -3,6 +3,7 @@ package com.clt.controller;
 import com.clt.dto.SubmissionCodeDTO;
 import com.clt.entity.JudgeResult;
 import com.clt.entity.Result;
+import com.clt.exception.NullProblemIdException;
 import com.clt.service.SubmissionService;
 import com.clt.service.UserService;
 import com.clt.utils.JwtUtil;
@@ -29,7 +30,7 @@ public class SubmissionController {
      * 提交代码
      */
     @PostMapping
-    public Result submitCode(@RequestBody SubmissionCodeDTO submissionCodeDTO, @RequestHeader("token") String token) throws Exception {
+    public Result submitCode(@RequestBody SubmissionCodeDTO submissionCodeDTO, @RequestHeader("token") String token) {
         //校验题目 ID 是否有效
         if (submissionCodeDTO.getProblemId() <= 0) {
             return Result.error("无效的题目 ID");
@@ -41,7 +42,14 @@ public class SubmissionController {
         //利用token获取用户ID
         Integer userId = jwtUtil.parseToken(token).get("id", Integer.class);
 
-        SubmissionResultVO result =  submissionService.submitCode(submissionCodeDTO, userId);
+        SubmissionResultVO result = null;
+        try {
+            result = submissionService.submitCode(submissionCodeDTO, userId);
+        } catch (NullProblemIdException e) {
+            return Result.error("题目ID不能为空");
+        } catch (RuntimeException e) {
+            return Result.error("提交失败");
+        }
 
         if (result == null) {
             return Result.error("提交失败");

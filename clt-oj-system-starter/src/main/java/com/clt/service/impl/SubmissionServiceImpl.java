@@ -5,6 +5,7 @@ import com.clt.entity.JudgeResult;
 import com.clt.entity.SolvedProblemCount;
 import com.clt.entity.TestCase;
 import com.clt.enums.SubmissionStatus;
+import com.clt.exception.NullProblemIdException;
 import com.clt.mapper.SolvedProblemCountMapper;
 import com.clt.mapper.SubmissionMapper;
 import com.clt.service.JudgeService;
@@ -41,7 +42,12 @@ public class SubmissionServiceImpl implements SubmissionService {
      */
     @Transactional
     @Override
-    public SubmissionResultVO submitCode(SubmissionCodeDTO submissionCodeDTO, Integer userId) throws Exception {
+    public SubmissionResultVO submitCode(SubmissionCodeDTO submissionCodeDTO, Integer userId) throws RuntimeException {
+
+        if (submissionCodeDTO.getProblemId() == null) {
+            throw new NullProblemIdException("题目ID不能为空");
+        }
+
         SubmissionResultVO result = new SubmissionResultVO();
 
         // 1. 调用判题机
