@@ -55,6 +55,7 @@
     <select id="getUsersRank" resultType="com.clt.vo.UserRankVO">
         SELECT u.id as user_id, nickname, avatar
         FROM users u INNER JOIN solved_problem_counts s ON u.id = s.user_id
+        WHERE solved_count > 0
         GROUP BY u.id, u.nickname
         ORDER BY COUNT(*) DESC
     </select>
