@@ -20,6 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**") // 拦截所有 API 请求
                 .excludePathPatterns("/auth/**",
                         "/problems/**",
-                        "/users/*"); // 排除登录注册接口
+                        "/users/*",
+                        "/echarts/**"); // 排除登录注册接口
     }
 }

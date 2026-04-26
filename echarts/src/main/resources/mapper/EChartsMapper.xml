@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clt.mapper.EChartsMapper">
+    <update id="cleanPunchCount">
+        UPDATE users
+        SET punch_count = 0
+        WHERE id = #{userId}
+    </update>
+
+    <select id="getScoreToRadarChart" resultType="java.lang.Integer">
+        SELECT COUNT(*) count
+        FROM tags
+                 JOIN (SELECT ptr.problem_id, tag_id
+                       FROM problem_tag_relation ptr
+                                JOIN (SELECT DISTINCT problem_id FROM submissions WHERE user_id = #{userId}) su
+                                     ON ptr.problem_id = su.problem_id) ptrs ON tags.id = ptrs.tag_id
+        WHERE tags.name LIKE CONCAT('%', #{condition}, '%') || tags.name IN (#{condition})
+    </select>
+    <select id="getTotalScoreToRadarChart" resultType="java.lang.Integer">
+        SELECT COUNT(*) count
+        FROM tags
+                 JOIN (SELECT ptr.problem_id, tag_id
+                       FROM problem_tag_relation ptr
+                                JOIN (SELECT DISTINCT id FROM problems) p
+                                     ON ptr.problem_id = p.id) ptrs ON tags.id = ptrs.tag_id
+        WHERE tags.name LIKE CONCAT('%', #{condition}, '%') || tags.name IN (#{condition})
+    </select>
+    <select id="getHeatChartData" resultType="com.clt.entity.HeatChartData">
+        SELECT DATE(submit_time) date, COUNT(*) count
+        FROM submissions
+        WHERE user_id = #{userId}
+        GROUP BY date;
+    </select>
+    <select id="getTotalThisYear" resultType="java.lang.Integer">
+        SELECT COUNT(*) count
+        FROM submissions
+        WHERE user_id = #{userId}
+          AND YEAR(submit_time) = YEAR(NOW())
+    </select>
+    <select id="getStreakDays" resultType="java.lang.Integer">
+        SELECT punch_count FROM users WHERE id = #{userId};
+    </select>
+    <select id="getLastSubmissionTime" resultType="java.time.OffsetDateTime">
+        SELECT MAX(submit_time) FROM submissions WHERE user_id = #{userId}
+    </select>
+
+</mapper>
