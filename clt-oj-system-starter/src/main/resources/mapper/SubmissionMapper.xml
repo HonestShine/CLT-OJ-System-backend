@@ -52,7 +52,7 @@
 
     <!--  获取最后一次提交时间  -->
     <select id="getLastSubmissionTime" resultType="java.time.LocalDateTime">
-        SELECT MAX(submit_time) FROM submissions
+        SELECT MAX(submit_time) FROM submissions WHERE user_id = #{userId}
     </select>
 
     <select id="getSubmissionInfoByUserId" resultType="com.clt.vo.SubmissionResultVO">

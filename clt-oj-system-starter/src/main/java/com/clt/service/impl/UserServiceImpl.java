@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -300,5 +302,17 @@ public class UserServiceImpl implements UserService {
             result.setRank(rank.getAndIncrement());
         });
         return results;
+    }
+
+    /**
+     * 打卡
+     */
+    @Override
+    public void punch(Integer userId) {
+        LocalDate leastSubmissionDate = submissionMapper.getLastSubmissionTime(userId).toLocalDate();
+        if (ChronoUnit.DAYS.between(leastSubmissionDate, LocalDate.now()) >= 1) {
+            // 打卡
+            userMapper.addPunchCount(userId);
+        }
     }
 }

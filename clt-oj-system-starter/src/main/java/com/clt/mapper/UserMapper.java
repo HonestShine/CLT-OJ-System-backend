@@ -61,4 +61,6 @@ public interface UserMapper {
      * 获取所有用户排名
      */
     List<UserRankVO> getUsersRank();
+
+    void addPunchCount(@Param("userId") Integer userId);
 }

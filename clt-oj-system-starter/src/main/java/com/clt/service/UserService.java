@@ -91,4 +91,9 @@ public interface UserService {
      * 所有用户排名信息列表
      */
     List<UserRankVO> getAllUserRank();
+
+    /**
+     * 打卡
+     */
+    void punch(Integer userId);
 }

@@ -298,7 +298,6 @@ public class ProblemServiceImpl implements ProblemService {
             int count = 0;
             double passRate;
             List<String> status = submissionService.getStatusByProblemId(p.getId());
-            List<Tag> tags = tagService.getProblemTagListByProblemId(p.getId());
             if (!status.isEmpty()) {
                 total += status.size();
                 for (String s : status) {
@@ -310,10 +309,10 @@ public class ProblemServiceImpl implements ProblemService {
             }
             String difficulty = ProblemDifficulty.getMassage(p.getDifficulty());
             String passRateStr = String.format("%.2f", passRate * 100) + "%";
-            problemRecommendVOList.add(new ProblemRecommendVO(p.getId(), p.getTitle(), p.getDescription(), difficulty, tags, passRateStr));
+            problemRecommendVOList.add(new ProblemRecommendVO(p.getId(), p.getTitle(), p.getDescription(), difficulty, passRateStr));
         });
         problemRecommendVOList.sort(Comparator.comparing(ProblemRecommendVO::getPassRate).reversed());
-        return problemRecommendVOList.subList(0, 3);
+        return problemRecommendVOList.subList(0, 6);
     }
 
     /**

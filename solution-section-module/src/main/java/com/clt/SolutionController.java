@@ -1,4 +1,4 @@
-package com.clt.controller;
+package com.clt;
 
 import com.clt.entity.Comment;
 import com.clt.entity.Result;

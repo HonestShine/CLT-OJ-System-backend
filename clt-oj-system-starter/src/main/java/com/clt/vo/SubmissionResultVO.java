@@ -14,6 +14,8 @@ public class SubmissionResultVO {
     private Integer problemId;
     private Integer userId;
     private String code;
+    private Double runtime;
+    private Double memory;
     private String language;
     private String status;
     private LocalDateTime submitTime;

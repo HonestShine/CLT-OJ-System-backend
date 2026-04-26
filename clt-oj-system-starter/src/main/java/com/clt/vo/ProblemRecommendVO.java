@@ -1,12 +1,10 @@
 package com.clt.vo;
 
-import com.clt.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +14,6 @@ public class ProblemRecommendVO implements Comparable<ProblemRecommendVO>{
     private String problemTitle;
     private String description;
     private String difficulty;
-    private List<Tag> tags;
     private String passRate;
 
     @Override

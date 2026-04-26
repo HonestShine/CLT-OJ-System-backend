@@ -65,4 +65,9 @@
         INSERT INTO users (username, password, role, created_at, nickname)
         VALUES (#{username}, #{password}, #{role}, #{createdAt}, #{nickname})
     </insert>
+
+
+    <update id="addPunchCount">
+        UPDATE users SET punch_count = punch_count + 1, last_punch_time = NOW() WHERE id = #{userId}
+    </update>
 </mapper>

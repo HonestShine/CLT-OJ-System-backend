@@ -11,6 +11,7 @@
         <module name="virtual-pet-module" />
         <module name="utils" />
         <module name="ai-qianwen-generator-module" />
+        <module name="echarts" />
       </profile>
       <profile name="Annotation profile for CLT_OJ_System" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -28,6 +29,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ai-qianwen-generator-module" options="-parameters" />
       <module name="clt-oj-system-starter" options="-parameters" />
+      <module name="echarts" options="-parameters" />
       <module name="solution-section-module" options="-parameters" />
       <module name="utils" options="-parameters" />
       <module name="virtual-pet-module" options="-parameters" />

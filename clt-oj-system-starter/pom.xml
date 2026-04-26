@@ -42,7 +42,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- 引入自定义的 AI 子模块 -->
+        <!-- 引入子模块 -->
         <dependency>
             <groupId>com.clt</groupId>
             <artifactId>ai-qianwen-generator-module</artifactId>
@@ -64,6 +64,12 @@
         <dependency>
             <groupId>com.clt</groupId>
             <artifactId>utils</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.clt</groupId>
+            <artifactId>echarts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

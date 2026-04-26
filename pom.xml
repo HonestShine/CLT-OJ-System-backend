@@ -41,6 +41,7 @@
         <module>virtual-pet-module</module>
         <module>utils</module>
         <module>solution-section-module</module>
+        <module>echarts</module>
     </modules>
 
     <dependencies>

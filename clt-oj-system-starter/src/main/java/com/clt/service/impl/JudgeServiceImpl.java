@@ -187,7 +187,7 @@ public class JudgeServiceImpl implements JudgeService {
     private int getLanguageCode(String language) {
         return switch (language) {
             case "C", "c", "C(GCC 14.1.0)" -> Languages.C.code; // Judge0 C 常用 9, 48, 50
-            case "C++", "cpp", "C++(GCC 14.1.0)" -> Languages.CPP.code; // Judge0 C++ 常用 105, 54
+            case "C++", "c++", "cpp", "C++(GCC 14.1.0)" -> Languages.CPP.code; // Judge0 C++ 常用 105, 54
             case "Java", "java", "Java(OpenJDK 17.0.6)" -> Languages.JAVA_17.code; // Judge0 Java 常用 91, 62
             case "Python", "python", "Python(3.13.2)" -> Languages.PYTHON_3.code; // Judge0 Python 常用 109, 92, 71
             case "Go", "go", "Go(1.22.0)" -> Languages.GO.code; // Judge0 Go 常用 106, 95

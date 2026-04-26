@@ -190,7 +190,7 @@ public class ProblemController {
     }
 
     /**
-     * 获取推荐题目 3个
+     * 获取推荐题目 6个
      */
     @GetMapping("/problems/recommend")
     public Result getRecommendProblems() {

@@ -15,7 +15,7 @@ public interface SubmissionMapper {
     /**
      * 通过题目ID获取提交状态
      */
-    List<String> getStatusByProblemId(Integer id);
+    List<String> getStatusByProblemId(@Param("id") Integer id);
 
     /**
      * 插入提交记录
@@ -30,17 +30,17 @@ public interface SubmissionMapper {
     /**
      * 通过提交ID获取提交信息
      */
-    JudgeResult getSubmissionInfoById(Integer id);
+    JudgeResult getSubmissionInfoById(@Param("id") Integer id);
 
     /**
      * 通过提交ID获取测试用例
      */
-    List<TestCase> getSubmissionTestCasesBYSubmissionId(Integer id);
+    List<TestCase> getSubmissionTestCasesBYSubmissionId(@Param("id") Integer id);
 
     /**
      * 通过题目ID和用户ID获取提交结果
      */
-    List<SubmissionResultVO> getSubmissionResult(Integer problemId, Integer userId);
+    List<SubmissionResultVO> getSubmissionResult(@Param("problemId") Integer problemId, @Param("userId") Integer userId);
 
     /**
      * 获取所有提交结果
@@ -50,14 +50,14 @@ public interface SubmissionMapper {
     /**
      * 获取用户最后一次提交时间
      */
-    LocalDateTime getLastSubmissionTime(Integer id);
+    LocalDateTime getLastSubmissionTime(@Param("userId") Integer userId);
 
-    List<SubmissionResultVO> getSubmissionInfoByUserId(Integer userId);
+    List<SubmissionResultVO> getSubmissionInfoByUserId(@Param("userId") Integer userId);
 
     /**
      * 通过题目ID删除提交记录
      */
-    int deleteByProblemId(Integer id);
+    int deleteByProblemId(@Param("id") Integer id);
 
     /**
      * 通过题目ID获取提交ID

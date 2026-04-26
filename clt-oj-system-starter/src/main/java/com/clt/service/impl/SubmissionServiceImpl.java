@@ -10,6 +10,7 @@ import com.clt.mapper.SolvedProblemCountMapper;
 import com.clt.mapper.SubmissionMapper;
 import com.clt.service.JudgeService;
 import com.clt.service.SubmissionService;
+import com.clt.service.UserService;
 import com.clt.vo.SubmissionResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Autowired
     private SubmissionMapper submissionMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JudgeService judgeService;
@@ -97,9 +101,14 @@ public class SubmissionServiceImpl implements SubmissionService {
         result.setProblemId(judgeResult.getProblemId());
         result.setUserId(userId);
         result.setCode(judgeResult.getCode());
+        result.setRuntime(judgeResult.getRuntime());
+        result.setMemory(judgeResult.getMemory());
         result.setLanguage(judgeResult.getLanguage());
         result.setStatus(judgeResult.getStatus());
         result.setSubmitTime(judgeResult.getSubmitTime());
+
+        // 打卡
+        userService.punch(userId);
 
         return result;
     }
