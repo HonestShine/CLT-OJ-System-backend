@@ -3,7 +3,6 @@ package com.clt.controller;
 import com.clt.entity.Result;
 import com.clt.service.EChartsService;
 import com.clt.utils.JwtUtil;
-import com.clt.vo.RadarChartDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -25,7 +24,7 @@ public class EChartsController {
      */
     @GetMapping("/radarChart")
     public Result getRadarChartData(@RequestHeader("token") String token) {
-        if (!jwtUtil.validateToken(token)) {
+        if (!jwtUtil.validateToken(token) || token == null) {
             return Result.error("401", "未登录");
         }
         // 从token中获取用户ID
@@ -39,7 +38,7 @@ public class EChartsController {
      */
     @GetMapping("/heatChart")
     public Result getHeatChartData(@RequestHeader("token") String token) {
-        if (!jwtUtil.validateToken(token)) {
+        if (!jwtUtil.validateToken(token) || token == null) {
             return Result.error("401", "未登录");
         }
         // 从token中获取用户ID

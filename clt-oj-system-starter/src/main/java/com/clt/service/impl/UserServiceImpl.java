@@ -310,6 +310,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void punch(Integer userId) {
         LocalDate leastSubmissionDate = submissionMapper.getLastSubmissionTime(userId).toLocalDate();
+        if (leastSubmissionDate == null) {
+            // 打卡
+            userMapper.addPunchCount(userId);
+            return;
+        }
         if (ChronoUnit.DAYS.between(leastSubmissionDate, LocalDate.now()) >= 1) {
             // 打卡
             userMapper.addPunchCount(userId);

@@ -52,6 +52,9 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new NullProblemIdException("题目ID不能为空");
         }
 
+        // 打卡
+        userService.punch(userId);
+
         SubmissionResultVO result = new SubmissionResultVO();
 
         // 1. 调用判题机
@@ -106,9 +109,6 @@ public class SubmissionServiceImpl implements SubmissionService {
         result.setLanguage(judgeResult.getLanguage());
         result.setStatus(judgeResult.getStatus());
         result.setSubmitTime(judgeResult.getSubmitTime());
-
-        // 打卡
-        userService.punch(userId);
 
         return result;
     }
