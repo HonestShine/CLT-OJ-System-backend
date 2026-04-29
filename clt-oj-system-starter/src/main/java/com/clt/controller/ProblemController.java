@@ -28,7 +28,8 @@ public class ProblemController {
      * 分页查询
      */
     @GetMapping("/problems/page")
-    public Result getProblemList(@RequestParam(value = "start", required = false, defaultValue = "0") Integer start, @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+    public Result getProblemList(@RequestParam(value = "start", required = false, defaultValue = "0") Integer start,
+                                 @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         ProblemPageVO problemPageVO = problemService.getProblemListOfPage(start, pageSize);
         return Result.success(problemPageVO);
     }
@@ -71,8 +72,10 @@ public class ProblemController {
      * 搜索问题(模糊匹配)
      */
     @GetMapping("/problems/search")
-    public Result searchProblem(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
-        ProblemPageVO problemPageVO = problemService.searchProblem(keyword);
+    public Result searchProblem(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                @RequestParam(value = "start", required = false, defaultValue = "0") Integer start,
+                                @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        ProblemPageVO problemPageVO = problemService.searchProblem(keyword, start, pageSize);
         return Result.success(problemPageVO);
     }
 

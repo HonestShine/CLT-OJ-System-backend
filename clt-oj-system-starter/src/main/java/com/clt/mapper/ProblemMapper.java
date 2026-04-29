@@ -72,5 +72,5 @@ public interface ProblemMapper {
 
     Integer getFilteredProblemCount(@Param("difficulty") int difficulty);
 
-    Integer getProblemByKeywordCount(@Param("keyword") String keyword);
+    Integer getProblemByKeywordCount(@Param("keyword") String keyword, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
 }

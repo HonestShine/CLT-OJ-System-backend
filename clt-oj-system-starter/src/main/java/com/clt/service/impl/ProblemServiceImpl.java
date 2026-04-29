@@ -313,8 +313,8 @@ public class ProblemServiceImpl implements ProblemService {
      * 搜索题目
      */
     @Override
-    public ProblemPageVO searchProblem(String keyword) {
-        Integer size = problemMapper.getProblemByKeywordCount(keyword);
+    public ProblemPageVO searchProblem(String keyword, Integer start, Integer pageSize) {
+        Integer size = problemMapper.getProblemByKeywordCount(keyword, start, pageSize);
         List<ProblemTitleInfoVO> problemTitleInfoVOList = new ArrayList<>();
         List<Problem> searchedProblemList = problemMapper.searchProblemList(keyword);
         searchedProblemList.forEach(p -> {

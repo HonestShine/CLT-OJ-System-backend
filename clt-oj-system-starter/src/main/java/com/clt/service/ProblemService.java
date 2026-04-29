@@ -29,7 +29,7 @@ public interface ProblemService {
     /**
      * 搜索题目
      */
-    ProblemPageVO searchProblem(String keyword);
+    ProblemPageVO searchProblem(String keyword, Integer start, Integer pageSize);
 
     /**
      * 根据难度过滤题目
