@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
             throw new SameOldAndNewPasswordsException("新旧密码一致");
         }
         if (!oldPassword.equals(password)) {
-            throw new InconsistentPasswordsException("密码不一致");
+            throw new InconsistentPasswordsException("密码错误");
         }
         if (!isValidPassword(newPassword)) {
             throw new NewPasswordIsNotValidException("密码强度不足：必须包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度只能在8~16位之间");
