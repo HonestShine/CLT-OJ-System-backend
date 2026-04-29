@@ -105,9 +105,16 @@
         SELECT id, title, difficulty, description FROM problems
     </select>
 
-
     <select id="getSolutionIdByProblemId" resultType="java.lang.Integer">
         SELECT id FROM solutions WHERE problem_id = #{id}
+    </select>
+
+    <select id="getFilteredProblemCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM problems WHERE difficulty = #{difficulty}
+    </select>
+
+    <select id="getProblemByKeywordCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM problems WHERE title LIKE concat('%', #{keyword}, '%')
     </select>
 
 </mapper>

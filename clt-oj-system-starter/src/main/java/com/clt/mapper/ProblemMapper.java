@@ -58,8 +58,6 @@ public interface ProblemMapper {
 
     List<Problem> getRecommendProblem();
 
-
-
     List<Integer> getSolutionIdByProblemId(@Param("id") Integer id);
 
     int deleteSolutionContentBySolutionId(@Param("solutionId") Integer solutionId);
@@ -71,4 +69,8 @@ public interface ProblemMapper {
     int deleteUserProblemStatusByProblemId(@Param("id") Integer id);
 
     int deleteSolvedProblemCountByProblemId(@Param("id") Integer id);
+
+    Integer getFilteredProblemCount(@Param("difficulty") int difficulty);
+
+    Integer getProblemByKeywordCount(@Param("keyword") String keyword);
 }

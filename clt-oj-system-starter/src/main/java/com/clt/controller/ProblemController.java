@@ -7,8 +7,8 @@ import com.clt.enums.ProblemDifficulty;
 import com.clt.exception.*;
 import com.clt.utils.JwtUtil;
 import com.clt.vo.ProblemAllInfoVO;
+import com.clt.vo.ProblemPageVO;
 import com.clt.vo.ProblemRecommendVO;
-import com.clt.vo.ProblemTitleInfoVO;
 import com.clt.service.ProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,21 +25,12 @@ public class ProblemController {
     private JwtUtil jwtUtil;
 
     /**
-     * 获取问题列表
-     */
-    @GetMapping("/problems/size")
-    public Result getProblemList() {
-        Integer problemListCount = problemService.getProblemListCount();
-        return Result.success(problemListCount);
-    }
-
-    /**
      * 分页查询
      */
     @GetMapping("/problems/page")
     public Result getProblemList(@RequestParam(value = "start", required = false, defaultValue = "0") Integer start, @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
-        List<ProblemTitleInfoVO> problemList = problemService.getProblemListOfPage(start, pageSize);
-        return Result.success(problemList);
+        ProblemPageVO problemPageVO = problemService.getProblemListOfPage(start, pageSize);
+        return Result.success(problemPageVO);
     }
 
     /**
@@ -81,8 +72,8 @@ public class ProblemController {
      */
     @GetMapping("/problems/search")
     public Result searchProblem(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
-        List<ProblemTitleInfoVO> problemList = problemService.searchProblem(keyword);
-        return Result.success(problemList);
+        ProblemPageVO problemPageVO = problemService.searchProblem(keyword);
+        return Result.success(problemPageVO);
     }
 
     /**
@@ -92,8 +83,8 @@ public class ProblemController {
     public Result filterProblem(@RequestParam(value = "difficulty", required = false, defaultValue = "") String difficulty,
                                 @RequestParam(value = "start", required = false, defaultValue = "0") Integer start,
                                 @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
-        List<ProblemTitleInfoVO> problemList = problemService.filterProblem(difficulty, start, pageSize);
-        return Result.success(problemList);
+        ProblemPageVO problemPageVO = problemService.filterProblem(difficulty, start, pageSize);
+        return Result.success(problemPageVO);
     }
 
     /**

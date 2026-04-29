@@ -3,17 +3,12 @@ package com.clt.service;
 import com.clt.dto.ProblemCreationOrUpdateDTO;
 import com.clt.entity.Problem;
 import com.clt.exception.NoProblemException;
+import com.clt.vo.ProblemPageVO;
 import com.clt.vo.ProblemRecommendVO;
-import com.clt.vo.ProblemTitleInfoVO;
 
 import java.util.List;
 
 public interface ProblemService {
-
-    /**
-     * 获取题目列表,用于表格展示
-     */
-    Integer getProblemListCount();
 
     /**
      * 通过题目ID获取题目详情
@@ -34,12 +29,12 @@ public interface ProblemService {
     /**
      * 搜索题目
      */
-    List<ProblemTitleInfoVO> searchProblem(String keyword);
+    ProblemPageVO searchProblem(String keyword);
 
     /**
      * 根据难度过滤题目
      */
-    List<ProblemTitleInfoVO> filterProblem(String difficulty, Integer start, Integer pageSize);
+    ProblemPageVO filterProblem(String difficulty, Integer start, Integer pageSize);
 
     /**
      * 删除问题
@@ -49,7 +44,7 @@ public interface ProblemService {
     /**
      * 分页获取题目列表
      */
-    List<ProblemTitleInfoVO> getProblemListOfPage(Integer start, Integer pageeSize);
+    ProblemPageVO getProblemListOfPage(Integer start, Integer pageeSize);
 
     /**
      * 获取推荐题目

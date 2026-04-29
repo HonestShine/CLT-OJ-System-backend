@@ -3,6 +3,7 @@ package com.clt.service.impl;
 import com.clt.dto.ProblemCreationOrUpdateDTO;
 import com.clt.enums.ProblemDifficulty;
 import com.clt.exception.*;
+import com.clt.vo.ProblemPageVO;
 import com.clt.vo.ProblemRecommendVO;
 import com.clt.vo.ProblemTitleInfoVO;
 import com.clt.enums.SubmissionStatus;
@@ -35,14 +36,6 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Autowired
     private TagService tagService;
-
-    /**
-     * 获取题目列表,用于表格展示
-     */
-    @Override
-    public Integer getProblemListCount() {
-        return problemMapper.getProblemListCount();
-    }
 
     /**
      * 根据题目ID获取题目详情
@@ -261,7 +254,8 @@ public class ProblemServiceImpl implements ProblemService {
      * 分页查询
      */
     @Override
-    public List<ProblemTitleInfoVO> getProblemListOfPage(Integer start, Integer pageSize) {
+    public ProblemPageVO getProblemListOfPage(Integer start, Integer pageSize) {
+        Integer size = problemMapper.getProblemListCount();
         List<ProblemTitleInfoVO> problemTitleInfoVOList = new ArrayList<>();
         List<Problem> problemListOfPage = problemMapper.getProblemTilesListOfPage(start, pageSize);
         problemListOfPage.forEach(p -> {
@@ -283,7 +277,7 @@ public class ProblemServiceImpl implements ProblemService {
             String passRateStr = String.format("%.2f", passRate * 100) + "%";
             problemTitleInfoVOList.add(new ProblemTitleInfoVO(p.getId(), p.getTitle(), difficulty, passRateStr, tags));
         });
-        return problemTitleInfoVOList;
+        return new ProblemPageVO(size, problemTitleInfoVOList);
     }
 
     /**
@@ -319,7 +313,8 @@ public class ProblemServiceImpl implements ProblemService {
      * 搜索题目
      */
     @Override
-    public List<ProblemTitleInfoVO> searchProblem(String keyword) {
+    public ProblemPageVO searchProblem(String keyword) {
+        Integer size = problemMapper.getProblemByKeywordCount(keyword);
         List<ProblemTitleInfoVO> problemTitleInfoVOList = new ArrayList<>();
         List<Problem> searchedProblemList = problemMapper.searchProblemList(keyword);
         searchedProblemList.forEach(p -> {
@@ -341,14 +336,15 @@ public class ProblemServiceImpl implements ProblemService {
             problemTitleInfoVOList.add(new ProblemTitleInfoVO(p.getId(), p.getTitle(), ProblemDifficulty.getMassage(p.getDifficulty()), String.format("%.2f", passRate * 100) + "%", tags));
         });
 
-        return problemTitleInfoVOList;
+        return new ProblemPageVO(size, problemTitleInfoVOList);
     }
 
     /**
      * 筛选题目
      */
     @Override
-    public List<ProblemTitleInfoVO> filterProblem(String difficulty, Integer start, Integer pageSize) {
+    public ProblemPageVO filterProblem(String difficulty, Integer start, Integer pageSize) {
+        Integer size = problemMapper.getFilteredProblemCount(ProblemDifficulty.getCode(difficulty));
         if (difficulty != null && !difficulty.isEmpty()) {
             List<ProblemTitleInfoVO> problemTitleInfoVOList = new ArrayList<>();
             List<Problem> filteredProblemList = problemMapper.getProblemTilesListByDifficultyOfPage(ProblemDifficulty.getCode(difficulty), start, pageSize);
@@ -369,7 +365,7 @@ public class ProblemServiceImpl implements ProblemService {
                 }
                 problemTitleInfoVOList.add(new ProblemTitleInfoVO(p.getId(), p.getTitle(), ProblemDifficulty.getMassage(p.getDifficulty()), String.format("%.2f", passRate * 100) + "%", tags));
             });
-            return problemTitleInfoVOList;
+            return new ProblemPageVO(size, problemTitleInfoVOList);
         }else {
             return getProblemListOfPage(0, 10);
         }
