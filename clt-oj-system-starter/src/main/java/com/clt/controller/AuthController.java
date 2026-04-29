@@ -119,7 +119,7 @@ public class AuthController {
         } catch (SameOldAndNewPasswordsException e){
             return Result.error("新旧密码一致");
         } catch (InconsistentPasswordsException e) {
-            return Result.error("密码不一致");
+            return Result.error("密码错误");
         } catch (NewPasswordIsNotValidException e) {
             return Result.error("新密码强度不足：必须包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度只能在8~16位之间");
         } catch (RuntimeException e) {
