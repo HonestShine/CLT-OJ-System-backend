@@ -3,7 +3,6 @@ package com.clt.mapper;
 import com.clt.entity.User;
 import com.clt.vo.AllUserResultVO;
 import com.clt.vo.UserRankVO;
-import jakarta.validation.constraints.NotBlank;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -40,7 +39,7 @@ public interface UserMapper {
     /**
      * 修改用户密码
      */
-    void changePassword(@NotBlank(message = "新密码不能为空") String newPassword, @NotBlank(message = "用户名不能为空") String username);
+    void changePassword(@Param("newPassword") String newPassword, @Param("username") String username);
 
     /**
      * 查询所有用户信息

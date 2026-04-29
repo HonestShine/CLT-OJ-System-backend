@@ -3,9 +3,7 @@ package com.clt.service.impl;
 import com.clt.dto.UserChangeDTO;
 import com.clt.entity.User;
 import com.clt.enums.UserType;
-import com.clt.exception.UserHobbyOutOfRangeException;
-import com.clt.exception.UserIntroductionOutOfRangeException;
-import com.clt.exception.UserNicknameOutOfRangeException;
+import com.clt.exception.*;
 import com.clt.mapper.SolvedProblemCountMapper;
 import com.clt.mapper.SubmissionMapper;
 import com.clt.mapper.UserMapper;
@@ -17,6 +15,7 @@ import com.clt.vo.UserResultVO;
 import com.clt.vo.UserUpdateVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -163,13 +162,26 @@ public class UserServiceImpl implements UserService {
      * 修改用户密码
      */
     @Override
-    public boolean changePassword(UserChangeDTO userChangeDTO) {
-        if (getPasswordByUsername(userChangeDTO.getUsername()) == null || getPasswordByUsername(userChangeDTO.getUsername()).isEmpty()) {
-            return false;
-        }
-        userMapper.changePassword(userChangeDTO.getNewPassword(), userChangeDTO.getUsername());
+    @Transactional
+    public void changePassword(UserChangeDTO userChangeDTO) throws RuntimeException {
+        String username = userChangeDTO.getUsername();
+        String oldPassword = userChangeDTO.getOldPassword();
+        String newPassword = userChangeDTO.getNewPassword();
+        String password = getPasswordByUsername(username);
 
-        return true;
+        if (password == null || password.isEmpty()) {
+            throw new NullUserException("用户不存在");
+        }
+        if (oldPassword.equals(newPassword)) {
+            throw new SameOldAndNewPasswordsException("新旧密码一致");
+        }
+        if (!oldPassword.equals(password)) {
+            throw new InconsistentPasswordsException("密码不一致");
+        }
+        if (!isValidPassword(newPassword)) {
+            throw new NewPasswordIsNotValidException("密码强度不足：必须包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度只能在8~16位之间");
+        }
+        userMapper.changePassword(newPassword, username);
     }
 
     /**

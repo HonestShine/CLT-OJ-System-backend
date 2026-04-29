@@ -3,6 +3,10 @@ package com.clt.controller;
 import com.clt.dto.UserChangeDTO;
 import com.clt.entity.Result;
 import com.clt.entity.User;
+import com.clt.exception.InconsistentPasswordsException;
+import com.clt.exception.NewPasswordIsNotValidException;
+import com.clt.exception.NullUserException;
+import com.clt.exception.SameOldAndNewPasswordsException;
 import com.clt.utils.JwtUtil;
 import com.clt.vo.AuthVO;
 import com.clt.service.UserService;
@@ -95,8 +99,31 @@ public class AuthController {
      */
     @PutMapping("/change")
     public Result change(@RequestBody UserChangeDTO userChangeDTO) {
-        if (!userService.changePassword(userChangeDTO)) {
-            return Result.error("用户名或密码错误");
+        if (userChangeDTO == null) {
+            return Result.error("没有有效参数");
+        }
+        if (userChangeDTO.getUsername() == null || userChangeDTO.getUsername().isEmpty()) {
+            return Result.error("用户名不能为空");
+        }
+        if (userChangeDTO.getOldPassword() == null || userChangeDTO.getOldPassword().isEmpty()) {
+            return Result.error("旧密码不能为空");
+        }
+        if (userChangeDTO.getNewPassword() == null || userChangeDTO.getNewPassword().isEmpty()) {
+            return Result.error("新密码不能为空");
+        }
+
+        try {
+            userService.changePassword(userChangeDTO);
+        } catch (NullUserException e) {
+            return Result.error("用户不存在");
+        } catch (SameOldAndNewPasswordsException e){
+            return Result.error("新旧密码一致");
+        } catch (InconsistentPasswordsException e) {
+            return Result.error("密码不一致");
+        } catch (NewPasswordIsNotValidException e) {
+            return Result.error("新密码强度不足：必须包含大写字母、小写字母、数字、特殊符号中的至少三类，且长度只能在8~16位之间");
+        } catch (RuntimeException e) {
+            return Result.error("系统内部错误");
         }
 
         return Result.success();

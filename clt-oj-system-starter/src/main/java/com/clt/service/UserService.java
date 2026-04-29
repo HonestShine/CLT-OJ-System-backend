@@ -55,7 +55,7 @@ public interface UserService {
     /**
      * 修改用户密码
      */
-    boolean changePassword(UserChangeDTO userChangeDTO);
+    void changePassword(UserChangeDTO userChangeDTO) throws RuntimeException;
 
     /**
      * 获取所有用户信息
